@@ -1,1 +1,1 @@
-alert("conexión")
+const regex = /\-?\d+/;
