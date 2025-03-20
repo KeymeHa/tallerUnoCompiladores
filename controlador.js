@@ -1,1 +1,1 @@
-const regex = /\d{4}-\d{2}-\d{2};[A-Z]{3}(\d{3}|\d{2}[A-Z]);[A-Z]+;[A-Za-z ]+;\d{2};FATAL;FEMALE/;
+const regex = /\d{4}-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Z]{3}(\d{3}|\d{2}[A-Z]);[A-Z]+;[A-Za-z ]+;\d{2};(FATAL|NO FATAL);FEMALE/;
