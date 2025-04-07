@@ -45,8 +45,14 @@
                     <div class="card-body">
                         <p class="card-text">El archivo permitido debe ser en formato Texto (.txt)</p>
                         <div class="mb-3">
-                            <input class="form-control" type="file" id="formFile">
-                            <button class="btn btn-success my-2" id="btn_upload">Cargar</button>
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <input class="form-control" type="file" id="formFile">
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-success my-2" id="btn_upload">Cargar</button>
+                                </div>
+                              </div>
                         </div>
                     </div>
                 </div>
@@ -55,9 +61,9 @@
                 <div>
                     <div class="card">
                         <div class="card-header">
-                            <h5>Visualizar Archivo</h3>
+                            <h5>Vista Previa</h3>
                         </div>
-                        <div class="card-body" id="div_content" class="mt-3" style="min-height: 29rem; max-height: 29rem; overflow-y: auto;">
+                        <div class="card-body" id="div_content" class="mt-3" style="min-height: 25rem; max-height: 25rem; overflow-y: auto;">
                             
                         </div>
                         <div class="card-footer">
@@ -65,6 +71,14 @@
                             <select class="form-select" id="select_gender" aria-label="select género">
                                 <option value="FEMALE">Femenino</option>
                                 <option value="MALE">Masculino</option>
+                                <option value="0">Todo</option>
+                            </select>
+
+                            <label for="select_gv">Fatalidad</label>
+                            <select class="form-select" id="select_gv" aria-label="select género">
+                                <option value="0">FATAL Y NO FATAL</option>
+                                <option value="FATAL">FATAL</option>
+                                <option value="NO FATAL">NO FATAL</option>
                             </select>
 
                             </br>
@@ -86,6 +100,8 @@
                                 value="2023-01-01"
                                 min="2023-01-01"
                                 max="2023-12-31" />
+                            
+                                <button class="btn btn-sm btn-success my-2" id="btn_filter">Filtrar</button>
                         </div>
                     </div>
                 </div>
@@ -95,21 +111,22 @@
                 <div>
                     <div class="card">
                         <div class="card-header">
-                            <h5>Datos Obtenidos</h3>
+                            <h5>Coincidencias</h3>
                         </div>
-                        <div class="card-body" id="div_match" style="min-height: 18rem; max-height: 18rem; overflow-y: auto;">
-                            
-                        </div>
-                    </div>
-                    <div class="card my-2">
-                        <div class="card-header">
-                            <h5>Indicadores</h3>
-                        </div>
-                        <div class="card-body" id="div_resume" style="height: 12rem;">
+                        <div class="card-body" id="div_match" style="min-height: 31rem; max-height: 31rem; overflow-y: auto;">
                             
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body"><p id="p_er">E.R:</p></div>
             </div>
         </div>
     </div>

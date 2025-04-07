@@ -1,43 +1,108 @@
-const regex_primary = /20\d{2}-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Z]{3}(\d{3}|\d{2}[A-Z]);[A-Z]+;[A-Za-z ]+;\d{2};(FATAL|NO FATAL);FEMALE/gm;
+
+
+const regex_primary = /2023-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Z]{3}([0-9]{3}|[0-9]{2}[A-Z]);[A-Za-zÁÉÍÓÚáéíóú]+;[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};(FATAL|NO FATAL);FEMALE/gm;
 const regex_file = /.+\.txt/;
 
-//      ELEMENT
+
 const formFile = document.getElementById('formFile');
 const btn_upload = document.getElementById('btn_upload');
 const div_content = document.getElementById('div_content');
 const div_match = document.getElementById('div_match');
 const select_gender = document.getElementById('select_gender');
+const select_grav = document.getElementById('select_gv');
 const date_filter_start = document.getElementById('date_filter_start');
 const date_filter_end = document.getElementById('date_filter_end');
+const btn_filter = document.getElementById('btn_filter');
+const p_expression_r = document.getElementById('p_er');
 
-//      VARIABLES   
+
 var math_file;
 var content_file;
 
-//      EVENTS
 
-select_gender.addEventListener('change', () =>{
-    var select = select_gender;
-    errorAlert("Seleccionado "+select.value);
+btn_filter.addEventListener('click', ()=>{
+    /*
+        1) Tomar el valor de date start. OK
+        2) Tomar el valor de date end. OK
+        3) Tomar el valor de select_gender. OK
+        3) Validar que date start sea menor a start. OK
+        4) Validar que date start y end sean del año 2023. OK
+        5) invertir los formatos de la fecha en caso que no sea Y-m-d OK
+        6) Concatenar los valores date start, date end y select_gender en la expresión regular. OK
+        7) Tomar el array content file y validarlo segun las fechas start y end, al igual con el género. OK
+    */
+    const date_start = new Date(date_filter_start.value);
+    const date_end = new Date(date_filter_end.value); 
+    var gender = select_gender.value;
+    var gravity = select_grav.value;
+    const date_start_formatted = date_start.toISOString().slice(0, 10); 
+    const date_end_formatted = date_end.toISOString().slice(0, 10); 
+
+    if(date_start_formatted > date_end_formatted)
+    {
+        date_filter_end.value = date_filter_start.value;
+        return;
+    }
+
+    if( content_file === undefined )
+    {
+        errorAlert("No existen datos.");
+        return;
+    }
+    else{
+
+        year = date_start_formatted.slice(0,5);
+
+        //initial date
+        d_in = date_start_formatted.slice(-2)//day
+        m_in = date_start_formatted.slice(-5, -3)//month
+
+        //final date
+        d_out = date_end_formatted.slice(-2)//day
+        m_out = date_end_formatted.slice(-5, -3)//month
+
+        var er_completed;
+
+        if(date_start_formatted === date_end_formatted)
+        {
+            er_completed = date_start_formatted;
+        }
+        else{
+            er_completed = year+creation_ER(m_in, m_out, d_in, d_out);
+        }
+        
+        
+        //div_match.innerHTML = er_completed;
+        if(gravity === "0")
+        {
+            gravity = "(FATAL|NO FATAL)";
+        }
+
+        if(gender === "0")
+        {
+            gender = "(MALE|FEMALE)";
+        }
+
+        let regex_filtrer = new RegExp( er_completed+";[A-Z]{3}([0-9]{3}|[0-9]{2}[A-Z]);[A-Za-zÁÉÍÓÚáéíóú]+;[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};"+gravity+";"+gender, "gm");
+
+        let math_filter = content_file.match(regex_filtrer); 
+        p_expression_r.innerHTML = "E.R: " + regex_filtrer.toString();
+
+        if(math_filter !== null && math_filter.length > 0)
+        {
+            console.log(content_file)
+            div_match.innerHTML = math_filter.map(line => `<p>${line}</p>`).join('');
+        }
+        else
+        {
+            errorAlert("No se encontraron datos.");
+            div_match.innerHTML = "Sin datos."
+            return;
+        }
+
+    }
 });
 
-
-date_validate()
-{
-    /*
-        1) Tomar el valor de date start.
-        2) Tomar el valor de date end.
-        3) Tomar el valor de select_gender.
-        3) Validar que date start sea menor a start.
-        4) Validar que date start y end sean del año 2023.
-        5) invertir los formatos de la fecha en caso que no sea Y-m-d
-        6) Concatenar los valores date start, date end y select_gender.
-        7) Tomar el array content file y validarlo segun las fechas start y end, al igual con el género.
-    
-    
-    */
-}
- 
 btn_upload.addEventListener('click', () => {
     const file_upload = formFile.files[0];
 
@@ -62,6 +127,7 @@ btn_upload.addEventListener('click', () => {
                 if(math_file.length > 0)
                 {
                     div_match.innerHTML = math_file.map(line => `<p>${line}</p>`).join('');
+                    p_expression_r.innerHTML = "E.R: " + regex_primary.toString();
                 }
                 else
                 {
@@ -93,6 +159,184 @@ function errorAlert(title_sw)
       });
 }
 
+function condition_month(month_in, month_out)
+{
+    var m_start = parseInt(month_in);
+    var m_end = parseInt(month_out);
+    
+    if(m_start < 1 || m_end < 1 || m_start > 12  || m_end > 12)
+    {
+        return "error";
+    }
+
+    dif_month = m_end - (m_start+1);
+
+    switch(true)
+    {
+        case m_start   === m_end: return "a" 
+        case m_start+1 === m_end && m_start !== 9: return "b"
+        case m_start+1 === m_end && m_start === 9: return "c"
+        case dif_month === 1 && m_start === 8: return "d"
+        case dif_month === 1 && m_start === 9: return "e"
+        case dif_month === 1 && m_start === 10: return "f"
+        case dif_month === 1 : return "g"  
+        case m_start  < 10 && m_end  <  10: return "h" 
+        case m_start  < 10 && m_end === 10: return "i" 
+        case m_start === 8 && m_end === 11: return "j" 
+        case m_start  < 10 && m_end === 11: return "k" 
+        case m_start === 9 && m_end === 12: return "l" 
+        case m_start === 8 && m_end === 12: return "m" 
+        case m_start  < 10 && m_end === 12: return "n" 
+        default: return "error";   
+    }
+}
+
+
+function validateDay(fstart,fday_end,s_start,s_end, type_range = 0 )
+{
+    var concat_d;
+    var dis_day = parseInt(fstart)+1;//distance day
+    var date;
+    if( fstart === fday_end )
+    {
+        date = `(${fstart}[${s_start}-${s_end}])`;
+    }
+    else if(fstart == "3")
+    {
+        if(type_range !== 1)
+        {
+            if(s_start === "0")
+            {
+                date = `(${fstart}[0-1])`;
+            }
+            else
+            {
+                date = `${fstart}${s_start}`;
+            }
+            return date;
+        }
+        else
+        {
+            if(s_start === "0")
+            {
+                date = `${fstart}${s_start}`;
+                return date;
+            }
+            date = `(${fstart}[0-1])`;
+        }
+    }
+    else
+    {
+        if( dis_day ===  parseInt(fday_end) )
+        {
+            date = `(${fstart}[${s_start}-9]|${fday_end}[0-${s_end}])`;
+        }
+        else
+        {
+            dis_day = parseInt(fstart);
+            lim_dia =  parseInt(fday_end)-1;
+            concat_d = `${fstart}[${s_start}-9]|`;
+            var count = 0;
+            if(fday_end !== "0" )
+            {
+                while( dis_day !== lim_dia && count < 32  )
+                {
+                    dis_day+=1;
+                    concat_d += `${dis_day}[0-9]|`;
+                    count++;
+                }
+                return date = `(${concat_d}${fday_end}[0-${s_end}])`;
+            }
+            
+           date = `(${fday_end}[1-${s_end}])`;
+        }
+    }
+    
+    return date;
+}
+
+function range_month(s_startm , s_endm)
+{
+    var f_avan = parseInt(s_startm) ;
+    var e_avan = f_avan;
+    var s_endma = parseInt(s_endm);
+    var sw = true;
+    var count = 0;
+    var concat = "";
+    
+    if(s_endma >= 10)
+    {
+        concat = `[${f_avan+1}-9]`;
+    }
+    else if(s_startm !== s_endma)
+    {
+        while(sw && count < 8)
+        {
+            if( (e_avan+1) !== s_endma )
+            {
+                e_avan=1+e_avan;
+            }
+            else
+            {
+                sw = false;
+                concat = `[${f_avan+1}-${e_avan}]`;
+            }
+            count++;
+        }
+    }
+
+    return concat;
+}
+
+function creation_ER(month_in, month_out, day_in, day_out)
+{
+    let op = condition_month(month_in, month_out);
+
+    //---------------Individual values
+    //f_di = first_day_in
+    //s_de = second_day_in
+    //days
+    f_di = day_in.charAt(0);
+    s_di = day_in.charAt(1);
+    f_de = day_out.charAt(0);
+    s_de = day_out.charAt(1);
+    
+    //month
+    //f_mi = first_month_in
+    //s_mi = second_month_in
+    f_mi = month_in.charAt(0);
+    s_mi = month_in.charAt(1);
+    f_me = month_out.charAt(0);
+    s_me = month_out.charAt(1);
+
+    //variables
+    var r_month = range_month(month_in , month_out);
+    var range_days = validateDay(f_di,f_de,s_di,s_de, 1);
+    var in_days = validateDay(f_di,3,s_di,1);
+    var end_days = validateDay(0,f_de,1,s_de);
+    var all_days = validateDay(0,3,1,1);
+
+    let regular_expression = {
+        a: `${month_in}-${range_days}`,
+        b: `${f_mi}(${s_mi}-${in_days}|${s_me}-${end_days})`,
+        c: `(0${s_mi}-${in_days}|${month_out}-${end_days})`,
+        d: `(0(${s_mi}-${in_days}|9${all_days})|${month_out}-${end_days})`,
+        e: `(09${in_days}|1(0${all_days}|1${end_days}))`,
+        f: `1(0${in_days}|1${all_days}|2${end_days})`,
+        g: `0(${s_mi}-${in_days}|${parseInt(s_mi)+1}-${all_days}|${s_me}-${end_days})`,
+        h: `0(${s_mi}-${in_days}|${r_month}-${all_days}|${s_me}-${end_days})`,
+        i: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|${month_out}-${end_days})`,
+        j: `(0(8${in_days}|9${all_days})|1(0${all_days}|1${end_days}))`,
+        k: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|1(0-${all_days}|1-${end_days}))`,
+        l: `(${month_in}-${in_days}|1([0-1]${all_days}|2${end_days}))`,
+        m: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|1(0|1|2${end_days}))`,
+        n: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|1([0-1]-${all_days}|2-${end_days}))`
+    };
+    return regular_expression[op];     
+}
+
+
+
 /* 
 
 PENDIENTE
@@ -113,8 +357,8 @@ REQUISITOS FUNCIONALES
 9) recorrer el array e imprimirlo en elemento div. OK
 
 REQUISITOS NO FUNCIONALES
-1) Usar aletas suaves para los mensajes de error o advertencia.
-2) Refrescar los elementos una vez se necesite mostrar la información en pantalla.
+1) Usar aletas suaves para los mensajes de error o advertencia. OK
+2) Refrescar los elementos una vez se necesite mostrar la información en pantalla. OK
 
 MEJORAS
 1) Crear un div donde muestre un resumen de alguna información de los registros ejemplo:
@@ -122,7 +366,7 @@ MEJORAS
     - Cantidad de victimas según el genero (MALE | FEMALE)
     - Cantidad según Vehiculo (MOTOCICLETA | AUTOMOVIL | CAMION)
     - Cantidad de Registros según el periodo.
-2) Establecer un input donde seleccióne el mes a consultar.
+2) Establecer un input donde seleccióne la fecha a consultar. OK
 
 
 
