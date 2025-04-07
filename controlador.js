@@ -14,6 +14,7 @@ const date_filter_start = document.getElementById('date_filter_start');
 const date_filter_end = document.getElementById('date_filter_end');
 const btn_filter = document.getElementById('btn_filter');
 const p_expression_r = document.getElementById('p_er');
+p_expression_r.innerHTML = "E.R: " + regex_primary.toString();
 
 
 var math_file;
@@ -95,8 +96,7 @@ btn_filter.addEventListener('click', ()=>{
         }
         else
         {
-            errorAlert("No se encontraron datos.");
-            div_match.innerHTML = "Sin datos."
+            div_match.innerHTML = "Sin datos.";
             return;
         }
 
@@ -132,12 +132,14 @@ btn_upload.addEventListener('click', () => {
                 else
                 {
                     errorAlert("No se encontraron datos.");
+                    div_match.innerHTML = "Sin datos.";
                     return;
                 }
             }
             else
             {
                 errorAlert("No se encontraron datos.");
+                div_match.innerHTML = "Sin datos.";
                 return;
             }  
 
