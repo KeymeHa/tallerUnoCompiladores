@@ -29,7 +29,7 @@ Ejemplo:
 | Fecha Inicio | `Date` Y-m-d | Ej: 2023-01-01 |
 | Fecha Final | `Date` Y-m-d |Ej: 2023-01-01 |
 
-Los patrones de las expresiones regulares cambian a medida que se una vez se presione en el botón "filtrar".
+Los patrones de las expresiones regulares cambian una vez se presione en el botón "filtrar".
 
 
 
