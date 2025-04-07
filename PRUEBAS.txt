@@ -1,0 +1,134 @@
+
+AÑO                    MES
+--------|--------------------------------
+
+         INICIO | RANGO |    FIN    | ESTADO    |   ya?
+2023    -   01       ===        01   )   OK            
+2023    -   0(1       |          2   )   OK         
+2023    -   0(5  |  [6-8]    |   9   )   OK
+2023    -   0(5  |    6      |   7   )   OK
+2023    -(  09         |        10   )   OK
+2023    -(  0(1  |  [2-9]   )|  10   )   OK
+2023    -(  0(1  | [2-9])|1(0|   1)  )   OK
+2023    -(  0(1  |[2-9])|1(0|1|  2)  )   OK
+2023    -(  09   | 1(0       |   1)  )   OK
+2023    -(  09   | 1([0-1]   |   2)  )   OK
+--------|----------------------------------
+2023    -  10       ===        10        OK
+2023    -  1(0       |          1        OK
+2023    -  1(0  |    1      |   2        OK
+
+
+-------------------------------------------------------
+
+
+ES EXACTAMENTE IGUAL
+2023    -   01       ===        01   )
+2023    -   10       ===        10
+
+    SI mes_inicial IGUAL mes_final
+        mes_inicial[diaInicial-diaFinal]
+
+SUMARLE UNO ES IGUAL
+2023    -   0(1       |          2   )
+2023    - ( 0 9       |         10   )
+2023    -   1(0       |          1   )
+    SI mes_inicial+1 IGUAL a mes_final
+        SI primer_char IGUAL primer_char_final
+            2023    -   1(0       |          1   )
+            2023    -   0(1       |          2   )
+        SINO
+            2023    - ( 0 9       |         10   ) 
+
+SUMARLE DOS ES IGUAL, UN VALOR LOS SEPARA
+2023    -   0(5  |    6      |   7   )
+2023    -   1(0  |    1      |   2   )
+
+    SI mes_final - mes_inicial IGUAL a 2
+        SI segundo_char >= 8
+            SI segundo_char_final IGUAL 0
+                2023    - ( 0 (8 |    9)     |  10)
+            SINO SI segundo_char_final IGUAL 1
+                2023    - ( 0  9 |  1(0      |   1)  )
+            SINO    
+                2023    -   1( 0 |    1      |   2   )
+        SINO
+            2023    -   0(5  |    6      |   7   )
+
+
+RANGO DENTRO DEL PRIMER CARACTER CERO (0)
+2023    -   0(5  |  [6-8]    |   9   )
+    SI primer_char && primer_char_final IGUAL 0
+        2023    -   0(5  |  [6-8]    |   9   )
+
+RANGO PERO LIMITE ES 10
+2023    -(  0(1  |  [2-9]   )|  10   )
+    SI mes_final IGUAL 10 && primer_char IGUAL 0
+        2023    -(  0(1  |  [2-9]   )|  10   )
+
+RANGO PERO EMPIEZA DEL 09 HASTA EL 12
+2023    -(  09   | 1([0-1]   |   2)  )
+    SI segundo_char IGUAL 9 && mes_final 12
+        2023    -(  09   | 1([0-1]   |   2)  )
+
+RANGO PERO DESDE EL 01 HASTA EL 11
+2023    -(  0(1  | [2-9])|1(0|   1)  )
+    SI mes_final IGUAL 11 && primer_char IGUAL 0
+        2023    -(  0(1  | [2-9])|1(0|   1)  )
+
+RANGO DESDE TODO EL AÑO 01 AL 12
+2023    -(  0(1  |[2-9])|1(0|1|  2)  )
+    SI mes_inicial IGUAL 01 && mes_final 12
+        2023    -(  0(1  |[2-9])|1(0|1|  2)  )
+
+
+2023-(0(2(dias)|[3-9](dias))|1([0-1]-(dias)|2-(dias)))
+
+------------------------------------------------------
+
+mes_inicial = \d{2}
+mes_final = \d{2}
+
+primer_char = mes_inicial.charAt(1)
+segundo_char = mes_inicial.charAt(2)
+
+primer_char_final = mes_final.charAt(1)
+segundo_char_final = mes_final.charAt(2)
+
+
+    SI mes_inicial IGUAL mes_final
+        mes_inicial[diaInicial-diaFinal]
+    SI mes_inicial+1 IGUAL a mes_final
+        SI primer_char IGUAL primer_char_final
+            2023    -   1(0       |          1   )
+            2023    -   0(1       |          2   )
+        SINO
+            2023    - ( 0 9       |         10   ) 
+    SI mes_final - mes_inicial IGUAL a 2
+        SI segundo_char >= 8
+            SI segundo_char_final IGUAL 0
+                2023    - ( 0 (8 |    9)     |  10)
+            SINO SI segundo_char_final IGUAL 1
+                2023    - ( 0  9 |  1(0      |   1)  )
+            SINO    
+                2023    -   1( 0 |    1      |   2   )
+        SINO
+            2023    -   0(5  |    6      |   7   )
+    SI primer_char IGUAL 0 && primer_char_final IGUAL 0
+        2023    -   0(5  |  [6-8]    |   9   )
+    SI mes_final IGUAL 10 && primer_char IGUAL 0
+        2023    -(  0(1  |  [2-9]   )|  10   )
+    SI segundo_char IGUAL 9 && mes_final 12
+        2023    -(  09   | 1([0-1]   |   2)  )
+    SI mes_final IGUAL 11 && primer_char IGUAL 0
+        2023    -(  0(1  | [2-9])|1(0|   1)  )
+    SI mes_inicial IGUAL 01 && mes_final 12
+        2023    -(  0(1  |[2-9])|1(0|1|  2)  )
+
+
+
+
+mes_inicial = \d{2}
+mes_final = \d{2}
+
+dif_inicial =  
