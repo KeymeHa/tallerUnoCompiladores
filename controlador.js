@@ -1,4 +1,8 @@
-
+/**
+ * Taller #1 de teoría de compiladores.
+ * @author Kevin Bolaño
+ * @version 1
+ */
 
 const regex_primary = /2023-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};(FATAL|NO FATAL);FEMALE/gm;
 const regex_file = /.+\.txt/;
@@ -91,7 +95,6 @@ btn_filter.addEventListener('click', ()=>{
 
         if(math_filter !== null && math_filter.length > 0)
         {
-            console.log(content_file)
             div_match.innerHTML = math_filter.map(line => `<p>${line}</p>`).join('');
         }
         else
