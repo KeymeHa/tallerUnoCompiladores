@@ -12,7 +12,7 @@ YYYY-mm-dd ; placa ; Tipo_Vehiculo ; Nombre ; Edad ; gravedad [fatal | No Fatal]
 
 
 Ejemplo:
-2023-07-(0[1-9]) ; AXD54D ; MOTOCICLETA ; ANTONIO JIMENEZ ; 29 ; FATAL ; MALE
+2023-07-10;AXD54D;MOTOCICLETA;ANTONIO JIMENEZ;29;FATAL;MALE
 
 
 
