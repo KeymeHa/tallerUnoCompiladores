@@ -1,6 +1,6 @@
 
 
-const regex_primary = /2023-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Z]{3}([0-9]{3}|[0-9]{2}[A-Z]);[A-Za-zÁÉÍÓÚáéíóú]+;[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};(FATAL|NO FATAL);FEMALE/gm;
+const regex_primary = /2023-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};(FATAL|NO FATAL);FEMALE/gm;
 const regex_file = /.+\.txt/;
 
 
@@ -84,7 +84,7 @@ btn_filter.addEventListener('click', ()=>{
             gender = "(MALE|FEMALE)";
         }
 
-        let regex_filtrer = new RegExp( er_completed+";[A-Z]{3}([0-9]{3}|[0-9]{2}[A-Z]);[A-Za-zÁÉÍÓÚáéíóú]+;[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};"+gravity+";"+gender, "gm");
+        let regex_filtrer = new RegExp( er_completed+";[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};"+gravity+";"+gender, "gm");
 
         let math_filter = content_file.match(regex_filtrer); 
         p_expression_r.innerHTML = "E.R: " + regex_filtrer.toString();
@@ -186,9 +186,8 @@ function condition_month(month_in, month_out)
         case m_start  < 10 && m_end === 10: return "i" 
         case m_start === 8 && m_end === 11: return "j" 
         case m_start  < 10 && m_end === 11: return "k" 
-        case m_start === 9 && m_end === 12: return "l" 
-        case m_start === 8 && m_end === 12: return "m" 
-        case m_start  < 10 && m_end === 12: return "n" 
+        case m_start === 9 && m_end === 12: return "l"
+        case m_start  < 10 && m_start  != 9 && m_end === 12: return "m" 
         default: return "error";   
     }
 }
@@ -318,21 +317,22 @@ function creation_ER(month_in, month_out, day_in, day_out)
     var end_days = validateDay(0,f_de,1,s_de);
     var all_days = validateDay(0,3,1,1);
 
+    console.log("op: ",op);
+
     let regular_expression = {
         a: `${month_in}-${range_days}`,
         b: `${f_mi}(${s_mi}-${in_days}|${s_me}-${end_days})`,
         c: `(0${s_mi}-${in_days}|${month_out}-${end_days})`,
-        d: `(0(${s_mi}-${in_days}|9${all_days})|${month_out}-${end_days})`,
-        e: `(09${in_days}|1(0${all_days}|1${end_days}))`,
-        f: `1(0${in_days}|1${all_days}|2${end_days})`,
+        d: `(0(${s_mi}-${in_days}|9-${all_days})|${month_out}-${end_days})`,
+        e: `(09-${in_days}|1(0-${all_days}|1-${end_days}))`,
+        f: `1(0-${in_days}|1-${all_days}|2-${end_days})`,
         g: `0(${s_mi}-${in_days}|${parseInt(s_mi)+1}-${all_days}|${s_me}-${end_days})`,
         h: `0(${s_mi}-${in_days}|${r_month}-${all_days}|${s_me}-${end_days})`,
         i: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|${month_out}-${end_days})`,
-        j: `(0(8${in_days}|9${all_days})|1(0${all_days}|1${end_days}))`,
+        j: `(0(8-${in_days}|9-${all_days})|1(0-${all_days}|1-${end_days}))`,
         k: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|1(0-${all_days}|1-${end_days}))`,
-        l: `(${month_in}-${in_days}|1([0-1]${all_days}|2${end_days}))`,
-        m: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|1(0|1|2${end_days}))`,
-        n: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|1([0-1]-${all_days}|2-${end_days}))`
+        l: `(${month_in}-${in_days}|1([0-1]-${all_days}|2-${end_days}))`,
+        m: `(0(${s_mi}-${in_days}|${r_month}-${all_days})|1([0-1]-${all_days}|2-${end_days}))`
     };
     return regular_expression[op];     
 }
