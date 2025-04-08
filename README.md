@@ -2,7 +2,11 @@
 
 ## Instalación
 
-Solo es necesario abrir el archivo index.html con un navegador de internet y no tener deshabilitado JavaScript
+Solo es necesario abrir el archivo index.html con un navegador de internet
+
+## Requerimientos
+
+Contar con Navegador de internet, tener habilitado JavaScript en el navegador y contar con conexión a internet debido a las clases de Bootstrap 4
 
 ## Instrucciones de uso
 
