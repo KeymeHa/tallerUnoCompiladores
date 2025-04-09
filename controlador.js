@@ -19,11 +19,42 @@ const date_filter_end = document.getElementById('date_filter_end');
 const btn_filter = document.getElementById('btn_filter');
 const p_expression_r = document.getElementById('p_er');
 p_expression_r.innerHTML = "E.R: " + regex_primary.toString();
+var date_start;
+var date_end; 
 
 
 var math_file;
 var content_file;
 
+date_filter_start.addEventListener('change', ()=>{
+    date_start = new Date(date_filter_start.value);
+    date_end = new Date(date_filter_end.value); 
+    validateDate()
+})
+
+date_filter_end.addEventListener('change', ()=>{
+    date_start = new Date(date_filter_start.value);
+    date_end = new Date(date_filter_end.value); 
+    validateDate();
+})
+
+function validateDate()
+{
+    var sw = false;
+    if(date_start > date_end)
+    {
+        errorAlert("La fecha Final no puede ser menor a la fecha final");
+        date_filter_end.value = date_filter_start.value;
+        sw = true;
+    }
+    if(date_end < date_start)
+    {
+        errorAlert("La fecha Final no puede ser menor a la fecha final");
+        date_filter_start.value = date_filter_end.value;
+        sw = true;
+    }
+    return sw;
+}
 
 btn_filter.addEventListener('click', ()=>{
     /*
@@ -36,16 +67,15 @@ btn_filter.addEventListener('click', ()=>{
         6) Concatenar los valores date start, date end y select_gender en la expresión regular. OK
         7) Tomar el array content file y validarlo segun las fechas start y end, al igual con el género. OK
     */
-    const date_start = new Date(date_filter_start.value);
-    const date_end = new Date(date_filter_end.value); 
+    date_start = new Date(date_filter_start.value);
+    date_end = new Date(date_filter_end.value); 
     var gender = select_gender.value;
     var gravity = select_grav.value;
     const date_start_formatted = date_start.toISOString().slice(0, 10); 
     const date_end_formatted = date_end.toISOString().slice(0, 10); 
 
-    if(date_start_formatted > date_end_formatted)
+    if(validateDate())
     {
-        date_filter_end.value = date_filter_start.value;
         return;
     }
 
