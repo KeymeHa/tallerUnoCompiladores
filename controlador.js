@@ -4,7 +4,7 @@
  * @version 1
  */
 
-const regex_primary = /2023-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};(FATAL|NO FATAL);FEMALE/gm;
+const regex_primary = /2023-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóúñÑ]+;[0-9]{2};(FATAL|NO FATAL);FEMALE/gm;
 const regex_file = /.+\.txt/;
 
 
@@ -118,7 +118,7 @@ btn_filter.addEventListener('click', ()=>{
             gender = "(MALE|FEMALE)";
         }
 
-        let regex_filtrer = new RegExp( er_completed+";[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóú]+;[0-9]{2};"+gravity+";"+gender, "gm");
+        let regex_filtrer = new RegExp( er_completed+";[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóúñÑ]+;[0-9]{2};"+gravity+";"+gender, "gm");
 
         let math_filter = content_file.match(regex_filtrer); 
         p_expression_r.innerHTML = "E.R: " + regex_filtrer.toString();
