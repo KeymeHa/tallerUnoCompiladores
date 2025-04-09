@@ -4,8 +4,22 @@
  * @version 1
  */
 
-const regex_primary = /2023-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóúñÑ]+;[0-9]{2};(FATAL|NO FATAL);FEMALE/gm;
+const regex_primary = /2023-07-(0[1-9]|(1|2)[0-9]|3(0|1));[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóúñÑ]+;[0-9]{2};((N|n|N)(o|O) (F|f)(ATAL|atal)|(F|f)(ATAL|atal));(F|f)(EMALE|emale)/gm;
 const regex_file = /.+\.txt/;
+
+const genders = 
+{
+    all: '((M|m)(ale|ALE)|(F|f)(emale|EMALE))',
+    male: '(M|m)(ale|ALE)',
+    female: '(F|f)(emale|EMALE)'
+}
+
+const grav = 
+{
+    all: '((N|n|N)(o|O) (F|f)(ATAL|atal)|(F|f)(ATAL|atal))',
+    no: '(N|n|N)(o|O) (F|f)(ATAL|atal)',
+    yes: '(F|f)(ATAL|atal)'
+}
 
 
 const formFile = document.getElementById('formFile');
@@ -105,20 +119,15 @@ btn_filter.addEventListener('click', ()=>{
         else{
             er_completed = year+creation_ER(m_in, m_out, d_in, d_out);
         }
-        
+      
         
         //div_match.innerHTML = er_completed;
-        if(gravity === "0")
-        {
-            gravity = "(FATAL|NO FATAL)";
-        }
 
-        if(gender === "0")
-        {
-            gender = "(MALE|FEMALE)";
-        }
+        const grav_choice = grav[gravity];
 
-        let regex_filtrer = new RegExp( er_completed+";[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóúñÑ]+;[0-9]{2};"+gravity+";"+gender, "gm");
+        const gender_choice = genders[gender]
+
+        let regex_filtrer = new RegExp( er_completed+";[A-Za-z]{3}([0-9]{3};[A-Za-zÁÉÍÓÚáéíóú]+|[0-9]{2}[A-Za-z];(M|m)(OTOCICLETA|otocicleta));[A-Za-z ÁÉÍÓÚáéíóúñÑ]+;[0-9]{2};"+grav_choice+";"+gender_choice, "gm");
 
         let math_filter = content_file.match(regex_filtrer); 
         p_expression_r.innerHTML = "E.R: " + regex_filtrer.toString();
